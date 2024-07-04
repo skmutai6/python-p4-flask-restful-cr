@@ -45,27 +45,25 @@ class Newsletters(Resource):
         )
 
         return response
+    
+    def post(self):
+        new_record = Newsletter(
+            title=request.form['title'],
+            body=request.form['body'],
+        )
 
-api.add_resource(Newsletters, '/newsletters')
+        db.session.add(new_record)
+        db.session.commit()
 
-def post(self):
-    new_record = Newsletter(
-        title=request.form['title'],
-        body=request.form['body'],
-    )
+        response_dict = new_record.to_dict()
 
-    db.session.add(new_record)
-    db.session.commit()
+        response = make_response(
+            response_dict,
+            201,
+        )
 
-    response_dict = new_record.to_dict()
-
-    response = make_response(
-        response_dict,
-        201,
-    )
-
-    return response
-
+        return response
+    
 class NewsletterByID(Resource):
 
     def get(self, id):
@@ -79,7 +77,7 @@ class NewsletterByID(Resource):
 
         return response
 
-api.add_resource(NewsletterByID, '/newsletters/<int:id>')
+api.add_resource(Newsletters, '/newsletters')
 
 
 if __name__ == '__main__':
